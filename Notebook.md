@@ -16,14 +16,15 @@ We will now train a classifier for every category and supercatgory for which we 
 
 I create the file [Classif_all.py](Classif_all.py) from [Classif1.py](Classif1.py). Only now, C will not be hardcoded but will span all categories and supercategories for which we have enough data (educated-guess cutoff at 20 labelled samples).
 
-I run this file. Results will be stored in the *confusion+matrix.pdf, *_misclassified.txt and [classif_results.csv](classif_results) files.
+I run this file. Results will be stored in the *confusion_matrix.pdf, *_misclassified.txt and [classif_results.csv](classif_results) files.
 
+## Running those classifiers on yet-unknown data 
 
+Then, we will run those classifiers on yet uncompletely classified data : the data from years after 1999. We can not fully measure success very well unless we check by hand (which would be the same as creating more labelled data), but we can at least check that the categories the companies officialy listed themselves in are correctly detected by the classifier.
 
-Then, we will run those classifiers on yet uncompletely classified data : the data from years after 1998. We can not fully measure success very well unless we check by hand (which would be the same as creating more labelled data), but we can at least check that the categories the companies listed are correctly detected by the classifier.
+I create the file [Classif_unknown.py](Classif_unknown.py) to that effect.
 
-
-
+The results are saved in [BUS_labels_from_classifiers.txt](BUS_labels_from_classifiers.txt).
 
 # Misc Info
 - Supercategories : first two digits

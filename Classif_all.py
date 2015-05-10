@@ -155,6 +155,8 @@ for C in [c for c in categories if nb_items(c) >= 20]:
     with open('classif_results.csv', 'a') as f:
         #Headers should be written in the file outside the for loop
         f.write(','.join(map(str,[C, acc, std]+list(cm.reshape(-1))))+'\n')
+    with open(str(C)+'_count_vect.pickle', 'wb') as f:
+        pickle.dump(count_vect, f)
     with open(str(C)+'_tfidf_transformer.pickle', 'wb') as f:
         pickle.dump(tfidf_transformer, f)
     clf.fit(X_tfidf, Y)
