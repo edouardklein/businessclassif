@@ -110,6 +110,7 @@ def clf_eval(clf):
     #Confusion Matrix
     Y_true = []
     Y_pred = []
+    misclassified = []
     for train_index, test_index in loo:
         X_train, X_test = X_tfidf[train_index], X_tfidf[test_index]
         Y_train, Y_test = Y[train_index], Y[test_index]
@@ -118,14 +119,17 @@ def clf_eval(clf):
         clf.fit(X_train, Y_train)
         Y_pred.append(clf.predict(X_test))
         Y_true.append(Y_test)
+        if Y_true[-1] != Y_pred[-1]:
+            misclassified.append(other_year_cik[test_index])
     cm =  confusion_matrix(Y_true, Y_pred)
     plt.figure()
     sns.heatmap(cm, annot=True, fmt='d')
     plt.savefig('confusion_matrix.pdf')
-    return cm
+    return cm, misclassified
 
 
 # We train the classifier and evaluate its performance using a k-fold
 # http://scikit-learn.org/stable/modules/cross_validation.html#stratified-k-fold
 clf = MultinomialNB()
-clf_eval(clf)
+_, misclassified = clf_eval(clf)
+print(misclassified)
