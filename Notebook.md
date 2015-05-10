@@ -5,7 +5,9 @@ We want to be able to classify a company into multiple business categories or su
 The goal of the first experiment was to assess the capabilities of basic textual classification. Please see [the appropriate IPython notebook file](Business classification.ipynb). The results are that for categories with a suitable number of labelled samples, one can get very good classification results (96% accuracy with the best category (category 602)).
 
 In category 602 there was 35 false positives. That is to say 35 companies that the classifier recognized as belonging to category 602, but that were not listed as such in the labelled data. It is possible that those companies actually belong to category 602.
-TODO: Isolate those companies in a separate folder, to manually check whether they belong to category 602.
+
+The code in [Classif1.py](Classif1.py) now saves the misclassified descriptions in a [txt file](602_misclassified.txt). This file should be examined by hand to see if those companies belonged in the category they've been classified into.
+
 
 # Exp2
 We will now train a classifier for every category and supercatgory for which we have enough data, and save the classifiers in files that we can load later, and also save the results of the evaluation.

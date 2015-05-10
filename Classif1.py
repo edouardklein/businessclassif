@@ -120,11 +120,15 @@ def clf_eval(clf):
         Y_pred.append(clf.predict(X_test))
         Y_true.append(Y_test)
         if Y_true[-1] != Y_pred[-1]:
-            misclassified.append(other_year_cik[test_index])
+            assert(len(test_index) == 1)  # We test only one company at a time in the leave one out.
+            misclassified_index = test_index[0]
+            misclassified_index -= len(C_text)  # In Y, the first len(C_text) elements are the ones
+            #that actually belong to C, while the others are those in other_*
+            misclassified.append(other_year_cik[misclassified_index])
     cm =  confusion_matrix(Y_true, Y_pred)
     plt.figure()
     sns.heatmap(cm, annot=True, fmt='d')
-    plt.savefig('confusion_matrix.pdf')
+    plt.savefig(str(C)+'confusion_matrix.pdf')
     return cm, misclassified
 
 
@@ -133,3 +137,9 @@ def clf_eval(clf):
 clf = MultinomialNB()
 _, misclassified = clf_eval(clf)
 print(misclassified)
+with open(str(C)+'_misclassified.txt', 'w') as f:
+    for year, cik in misclassified:
+        f.write('YEAR {}, CIK {}, ______________________________\n\n'.format(year, cik))
+        files = glob.glob('{}/{}-*'.format(year,cik))
+        with open(files[0], 'r') as f2:
+            f.write(f2.read())
