@@ -49,7 +49,17 @@ For categories that don't have a lot of labelled data, add the descriptive words
 
 See the performance on the labelled data, and assume it will be the same on all data.
 
+To try this, I build an IPython notebook that will let me assess the quality of any strategy : [UsingDescriptiveWords.ipynb](UsingDescriptiveWords.ipynb).
 
+We begin by loading the data. Then we create and assess the 'perfect', 'worst', and 'random' baselines.
+
+The plot of the score for the baselines is what one can expect it to be.
+
+I now want to plot the score of the classifiers we learnt in Exp2. To be fair we should only compare the list we find to the list the classifier can possibly know about.
+
+This means modifying the assessment code to restrict the testing set. Ok this is done.
+
+I have implemented some deterministic tactics. The results are not very good. Testing new tactics will be easy thanks to the assessment code. Maybe I'll have more ideas soon.
 
 # Misc Info
 - Supercategories : first two digits

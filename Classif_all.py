@@ -172,12 +172,12 @@ for C in [c for c in categories if nb_items(c) >= 20]:
         with open('Exp2/classif_results.csv', 'a') as f:
             #Headers are written in the file just before the for loop
             f.write(','.join(map(str,[C, acc, std]+list(cm.reshape(-1))))+'\n')
-        with open('Exp2'+str(C)+'_count_vect.pickle', 'wb') as f:
+        with open('Exp2/'+str(C)+'_count_vect.pickle', 'wb') as f:
             pickle.dump(count_vect, f)
-        with open('Exp2'+str(C)+'_tfidf_transformer.pickle', 'wb') as f:
+        with open('Exp2/'+str(C)+'_tfidf_transformer.pickle', 'wb') as f:
             pickle.dump(tfidf_transformer, f)
         clf.fit(X_tfidf, Y)
-        with open('Exp2'+str(C)+'_classifier.pickle', 'wb') as f:
+        with open('Exp2/'+str(C)+'_classifier.pickle', 'wb') as f:
             pickle.dump(clf, f)
         automatable_categories.append(C)
 
