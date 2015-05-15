@@ -16,7 +16,20 @@ We will now train a classifier for every category and supercatgory for which we 
 
 I create the file [Classif_all.py](Classif_all.py) from [Classif1.py](Classif1.py). Only now, C will not be hardcoded but will span all categories and supercategories for which we have enough data (educated-guess cutoff at 20 labelled samples).
 
-I run this file. Results will be stored in the *confusion_matrix.pdf, *_misclassified.txt and [classif_results.csv](classif_results) files.
+I run this file. Results will be stored in the *confusion_matrix.pdf, *_misclassified.txt and [classif_results.csv](classif_results.csv) files.
+
+I made a mistake : I assumed all categories had three digits. This messes up the supercategories. I'll correct that and use the file descriptive words.csv to know how much categories and supercategories we are able to recognize out of all those that exist.
+
+I also implement a cutoff at 70% of performance (educated guess too) : if the mean performance minus the std dev is less than 70%, we don't save this classifier. If it's more than that, we say this is acceptable and use it in the second step.
+
+I also print the coverage (number of categories for which we can train a good classifier).
+
+Let's run this.
+
+We can 'reliably' recognize 20 out of 83 supercategories.
+We can 'reliably' recognize 11 out of 420 categories.
+
+
 
 ## Running those classifiers on yet-unknown data 
 
@@ -24,7 +37,19 @@ Then, we will run those classifiers on yet uncompletely classified data : the da
 
 I create the file [Classif_unknown.py](Classif_unknown.py) to that effect.
 
-The results are saved in [BUS_labels_from_classifiers.txt](BUS_labels_from_classifiers.txt).
+The results are saved in [Exp2/BUS_labels_from_classifiers.txt](Exp2/BUS_labels_from_classifiers.txt).
+
+TODO: List, for a company that has a single label, all the labels given by the classifiers.
+TODO: There exists subcategories of only two digits, put supercategories with a 0 in the end.
+TODO: Seperate supercategories and categories : two separate analysis
+
+# Exp3 Use description data
+
+For categories that don't have a lot of labelled data, add the descriptive words from the table.
+
+See the performance on the labelled data, and assume it will be the same on all data.
+
+
 
 # Misc Info
 - Supercategories : first two digits
