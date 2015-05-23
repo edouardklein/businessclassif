@@ -61,6 +61,37 @@ This means modifying the assessment code to restrict the testing set. Ok this is
 
 I have implemented some deterministic tactics. The results are not very good. Testing new tactics will be easy thanks to the assessment code. Maybe I'll have more ideas soon.
 
+# Exp4 Hierarchical matching
+## Restricting ourselves to supercategories
+There are too many categories, therefore I code a way to restrict the analysis to supercategories.
+
+The results are now better. The number of false-positives is less daunting.
+
+The strategies 'N most matching' and 'Any match within rank k' in particular are quite good for the supercategories.
+
+It would be nice to have a grid. I refactor the plotting functions in one function. Done.
+
+## Hierarchical matching
+
+Assuming we can perfectly match a company to the supercategory it belongs to, can we match it to the correct subcategories ?
+
+There is a visualization problem : There are ~100 supercategories, so that would mean ~100 plots for each strategy !
+
+Maybe by plotting all in the same plot, it looks good anyway. Let's try.
+
+It does not look very good, but the information is legible.
+
+Maybe I could do a specialized function to plot that, so that there is only one hull per strategy, instead of multiple hulls plotted one over the others as it is now. We'll see with the client :ASK:.
+
+The results are surprisingly good. The strategy 'all_must_match' seems promising.
+
+:BUG: I suspect I should take a look again at the plot function and the keywords argument. Maybe super_plot and so one are redundant now that I can give the 'all_cat' archument to comparative_plot
+
+# Exp5 Better use of descriptive words
+## Using exclusive descriptive words
+Some descriptive words are shared between two categories. Therefore, looking for them to select only one of those is risky. There should be a way (TF-IDF?) to select only relevant, somehow exclusive words.
+
+
 # Misc Info
 - Supercategories : first two digits
 - Categories ending in 9 : misc.
