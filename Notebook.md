@@ -81,16 +81,26 @@ Maybe by plotting all in the same plot, it looks good anyway. Let's try.
 
 It does not look very good, but the information is legible.
 
-Maybe I could do a specialized function to plot that, so that there is only one hull per strategy, instead of multiple hulls plotted one over the others as it is now. We'll see with the client :ASK:.
+Maybe I could do a specialized function to plot that, so that there is only one hull per strategy, instead of multiple hulls plotted one over the others as it is now. I wrote the =subcat_plot()= function to this end. It does look good enough.
 
 The results are surprisingly good. The strategy 'all_must_match' seems promising.
 
-:BUG: I suspect I should take a look again at the plot function and the keywords argument. Maybe super_plot and so one are redundant now that I can give the 'all_cat' archument to comparative_plot
+I suspect I should take a look again at the plot function and the keywords argument. Maybe super_plot and so on are redundant now that I can give the 'all_cat' archument to comparative_plot.
+I remove all *_plot fuctions and use the =all_cat= keyword argument instead.
+
+
 
 # Exp5 Better use of descriptive words
 ## Using exclusive descriptive words
 Some descriptive words are shared between two categories. Therefore, looking for them to select only one of those is risky. There should be a way (TF-IDF?) to select only relevant, somehow exclusive words.
 
+In this case, a document is made of the descriptive words for the supercategory and each of its subcategories. The whole corpus is the documents for all supercategories.
+
+We train a tf_idf transformer on that corpus.
+
+The we compute the distance between the tfidf transform of a cik text and all supercatgories' tf-idf vectors, and choose the closest(s).
+
+I made a mistake in the arithmetic code (int(c/10)==...) that works with supercategories and subcategories, etc. I should put that into functions.
 
 # Misc Info
 - Supercategories : first two digits
