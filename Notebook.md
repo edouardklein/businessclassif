@@ -91,7 +91,6 @@ I remove all *_plot fuctions and use the =all_cat= keyword argument instead.
 
 
 # Exp5 Better use of descriptive words
-## Using exclusive descriptive words
 Some descriptive words are shared between two categories. Therefore, looking for them to select only one of those is risky. There should be a way (TF-IDF?) to select only relevant, somehow exclusive words.
 
 In this case, a document is made of the descriptive words for the supercategory and each of its subcategories. The whole corpus is the documents for all supercategories.
@@ -100,7 +99,13 @@ We train a tf_idf transformer on that corpus.
 
 The we compute the distance between the tfidf transform of a cik text and all supercatgories' tf-idf vectors, and choose the closest(s).
 
-I made a mistake in the arithmetic code (int(c/10)==...) that works with supercategories and subcategories, etc. I should put that into functions.
+I made a mistake in the arithmetic code (int(c/10)==...) that works with supercategories and subcategories, etc. I should put that into functions. Done
+
+I code the tfidf matcher. It works OK
+
+It appears that solutions that return a fixed number of answer are inherently imperfect, because there is not a fixed number of categories per company.
+
+
 
 # Misc Info
 - Supercategories : first two digits
