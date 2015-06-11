@@ -81,7 +81,7 @@ Maybe by plotting all in the same plot, it looks good anyway. Let's try.
 
 It does not look very good, but the information is legible.
 
-Maybe I could do a specialized function to plot that, so that there is only one hull per strategy, instead of multiple hulls plotted one over the others as it is now. I wrote the =subcat_plot()= function to this end. It does look good enough.
+Maybe I could do a specialized function to plot that, so that there is only one hull per strategy, instead of multiple hulls plotted one over the others as it is now. I wrote the `subcat_plot()` function to this end. It does look good enough.
 
 The results are surprisingly good. The strategy 'all_must_match' seems promising.
 
@@ -104,6 +104,29 @@ I made a mistake in the arithmetic code (int(c/10)==...) that works with superca
 I code the tfidf matcher. It works OK
 
 It appears that solutions that return a fixed number of answer are inherently imperfect, because there is not a fixed number of categories per company.
+
+# Exp 6 Publishable results for the Machine Learning approach
+
+This is a consolidation of Exp2 and Exp4.
+
+I modify the file [Classif_all.py](Classif_all.py) to take into account some new directives :
+
+
+* In the labelled data, firms which have a supercategory as one of the labels should be ignored (probable misclabelling)
+* Firms which bear the label 999 should be ignored as well.
+* We need results using recall and power
+* Let's not use arbitrary thresholds (20 samples, 70%), but instead let's show the continuum of performance w.r.t. the amount of labelled data
+* We should reuse the visualisation from Exp4
+* Things must be saved incrementally, should the computation be halted unexpectedly.
+* We need to do things hierarchically. So first we train on supercategories
+* Then we assume the supercategory known and we train on category within a predefined supercategory.
+
+That last point may take a bit of work.
+
+I first take a look at the file from Exp2.
+I'll create a new one but a good basis is there
+
+
 
 
 
