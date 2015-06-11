@@ -120,13 +120,16 @@ I modify the file [Classif_all.py](Classif_all.py) to take into account some new
 * Things must be saved incrementally, should the computation be halted unexpectedly.
 * We need to do things hierarchically. So first we train on supercategories
 * Then we assume the supercategory known and we train on category within a predefined supercategory.
+* We need to plot/analyze things from one firm (how many false positives/false negatives etc.) as well as from one classifier (recall and power).
 
 That last point may take a bit of work.
 
 I first take a look at the file from Exp2.
-I'll create a new one but a good basis is there
+I'll create a new one from that, it's [Exp6.py](Exp6.py)
 
+I modify the code that loads [labeled_firms_single.txt](labeled_firms_single.txt) so that it ignores the firms labelled with a supercategory or 999.
 
+I clean up the code in functions, so later I can load it as a module in a notebook.
 
 
 

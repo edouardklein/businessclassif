@@ -10,59 +10,78 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pickle
 import pandas as pd
+import functools
 
+
+# Loading labelled data
 with open('labeled_firms_single.txt', 'r') as f:
     lines = f.read().split('\n')[1:]
+all_categories = list(pd.read_excel('descriptive_words.xls')['SIC3'])  # All categories that exist
 
-cik2year_category = defaultdict(list)
-category2year_cik = defaultdict(list)
-all_categories = list(pd.read_excel('descriptive_words.xls')['SIC3'])
+def is_super(cat):
+    '''Return True if cat is a supercategory'''
+    return cat % 10 == 0
+
+def is_sub_in_sup(sub, sup):
+    '''Return True if category sub is in supercategory sup'''
+    assert is_super(sup), 'sup is not a supercategory'
+    return int(sub/10)*10 == sup
+super_categories = [c for c in all_categories if is_super(c)]
+
+cik2year_category = defaultdict(set)
 for l in [l for l in lines if l]:
     _, str_cik ,_, str_year, str_category = l.split('\t')
     category = int(str_category[2:-2])
     assert(category in all_categories)
-    if category % 10 != 0:
-        super_category = int(category/10)*10
-    else:
-        super_category = None # Category ends with '0', it already is a supercategory
     year = int(str_year)
     cik = int(str_cik)
-    cik2year_category[cik].append([year, category])
-    category2year_cik[category].append([year, cik])
-    if super_category:
-        cik2year_category[cik].append([year, super_category])
-        category2year_cik[super_category].append([year, cik])
+    cik2year_category[cik].add((year, category))
 
-categories = list(category2year_cik.keys())
+def should_delete(category):
+    '''Whether a company should be deleted from the labelled data'''
+    return is_super(category) or category == 999
+
+old_length = len(cik2year_category)
+cik2year_category = {k:cik2year_category[k] for k in cik2year_category if not any(
+    [should_delete(yc[1]) for yc in cik2year_category[k]])}
+print('INFO: We removed {} firms because one of their labels '
+      'was a supercategory or 999'.format(old_length - len(cik2year_category)))
+
+category2year_cik = defaultdict(set)
+for cik,yc_set in cik2year_category.items():
+    for yc in yc_set:
+        category2year_cik[yc[1]].add((yc[0], cik))
+categories = list(category2year_cik.keys())  # Categories for which we hope to have data
+
+@functools.lru_cache()
+def text_samples_for_category(c):
+    """Return, as a list, the text samples for category c"""
+    C_text = []
+    for year, cik in category2year_cik[c]:
+        files = glob.glob('{}/{}-*'.format(year,cik))
+        if not files:
+            print('WARNING: file for cik:{}, year:{} not found !'.format(cik, year))
+            continue
+        if len(files) > 1:
+            print('WARNING: more than one file for cik:{}, year:{} !'.format(cik, year))
+            continue
+        with open(files[0], 'r') as f:
+            C_text.append(f.read())
+    return C_text
+
 def nb_items(cat):
-    return len(category2year_cik[cat])
+    return len(text_samples_for_category(cat))
 categories.sort(key=nb_items)
 
 print([[c,nb_items(c)] for c in categories])
 
-with open('Exp2/classif_results.csv', 'w') as f:
-    f.write('C, Accuracy, std_dev, TN, FP, FN, TP\n')
-automatable_categories = []
-for C in [c for c in categories if nb_items(c) >= 20]:
-    print("\n\n****************\nCategory : "+str(C))
-    C_text = []  # List of text samples for category C
-    for year, cik in category2year_cik[C]:
-        files = glob.glob('{}/{}-*'.format(year,cik))
-        if not files:
-            print('ACHTUNG: file for cik:{}, year:{} not found !'.format(cik, year))
-            continue
-        if len(files) > 1:
-            print('ACHTUNG: more than one file for cik:{}, year:{} !'.format(cik, year))
-            continue
-        with open(files[0], 'r') as f:
-            C_text.append(f.read())
-
-            #print(C_text[12])
-    N = len(C_text)
-    print(str(N)+' samples acutally available !')
+exit(0)
 
 
-    categories_other_than_C = [c for c in category2year_cik.keys() if c!= C]
+@functools.lru_cache()
+def text_samples_for_category_other_than(cat, n, disjoint_from=set([])):
+    """Return a list of n text samples for firms not in category c"""
+    categories_other_than_C = [c for c in category2year_cik.keys() if c!= cat]
     other_year_cik = []
     other_text = []  # List of text samples for the other categories
     i=0
@@ -70,21 +89,50 @@ for C in [c for c in categories if nb_items(c) >= 20]:
         i+=1
         not_C = random.choice(categories_other_than_C)
         year, cik = random.choice(category2year_cik[not_C])
-        if [cik, year] in category2year_cik[C]: # We check it's not also in C
-            print('cik:{}, year:{} also in category {}, choosing another one'.format(cik, year, C))
+        if (cik, year) in category2year_cik[C]: # We check it's not also in C
+            print('DEBUG: cik:{}, year:{} also in category {}, choosing another one'.format(cik, year, C))
+            continue
+        if (cik, year) in disjoint_from:
+            print('DEBUG:  cik:{}, year:{} in the forbidden set, choosing another one'.format(cik, year, C))
             continue
         files = glob.glob('{}/{}-*'.format(year,cik))
         if not files:
-            print('ACHTUNG: file for cik:{}, year:{} not found !'.format(cik, year))
+            print('WARNING: file for cik:{}, year:{} not found !'.format(cik, year))
             continue
         if len(files) > 1:
-            print('ACHTUNG: more than one file for cik:{}, year:{} !'.format(cik, year))
+            print('WARNING: more than one file for cik:{}, year:{} !'.format(cik, year))
             continue
         other_year_cik.append([year, cik])
         with open(files[0], 'r') as f:
             other_text.append(f.read())
-        print('Adding cik:{}, year:{}, total length now {}'.format(cik, year, len(other_text)))
-    print(str(len(other_text))+' samples not in category '+str(C))
+        print('DEBUG: Adding cik:{}, year:{}, total length now {}'.format(cik, year, len(other_text)))
+    print('INFO: '+str(len(other_text))+' samples not in category '+str(cat))
+    return other_text
+
+
+def clf_eval(c):
+    """Compute useful metrics for a classifier trained on category c"""
+    # Create base training set
+    # Create alternative training set
+    # Train on both
+    # For every firm
+    # If not in training set
+    # classify on main classfier, save results
+    # If in the training set as a negative example
+    # classify on alternative classifier, save results
+    # If in the training set as a positive example
+    # Create new training set without the sample
+    # Train and classify, save results
+
+with open('Exp2/classif_results.csv', 'w') as f:
+    f.write('C, Accuracy, std_dev, TN, FP, FN, TP\n')
+automatable_categories = []
+for C in [c for c in categories if nb_items(c) >= 20]:
+    print("\n\n****************\nCategory : "+str(C))
+    N = len(C_text)
+    print(str(N)+' samples acutally available !')
+
+
 
 
 
