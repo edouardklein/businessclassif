@@ -82,7 +82,7 @@ exit(0)
 def text_samples_for_category_other_than(cat, n, disjoint_from=set([])):
     """Return a list of n text samples for firms not in category c"""
     categories_other_than_C = [c for c in category2year_cik.keys() if c!= cat]
-    other_year_cik = []
+    other_year_cik = set()
     other_text = []  # List of text samples for the other categories
     i=0
     while len(other_text) < len(C_text) and i<10000:
@@ -102,20 +102,28 @@ def text_samples_for_category_other_than(cat, n, disjoint_from=set([])):
         if len(files) > 1:
             print('WARNING: more than one file for cik:{}, year:{} !'.format(cik, year))
             continue
-        other_year_cik.append([year, cik])
+        other_year_cik.add((year, cik))
         with open(files[0], 'r') as f:
             other_text.append(f.read())
         print('DEBUG: Adding cik:{}, year:{}, total length now {}'.format(cik, year, len(other_text)))
     print('INFO: '+str(len(other_text))+' samples not in category '+str(cat))
-    return other_text
+    return other_text, other_year_cik
 
 
 def clf_eval(c):
     """Compute useful metrics for a classifier trained on category c"""
     # Create base training set
+    C_texts = text_samples_for_category(c)
+    N = len(C_texts)
+    notC_texts, notC_yc = text_samples_for_category_other_than(c, N)
     # Create alternative training set
+    alt_notC_texts = text_samples_for_category_other_than(c, N, disjoint_from=notC_yc)
+    assert len(alt_notC_texts) == N, "We somehow could not find {} negative samples".format(2*N)
     # Train on both
+    main_clf = train_clf(C_texts, notC_texts)
+    alt_clf = train_clf(C_texts, alt_notC_texts)
     # For every firm
+    
     # If not in training set
     # classify on main classfier, save results
     # If in the training set as a negative example

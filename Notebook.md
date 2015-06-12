@@ -106,7 +106,7 @@ I code the tfidf matcher. It works OK
 It appears that solutions that return a fixed number of answer are inherently imperfect, because there is not a fixed number of categories per company.
 
 # Exp 6 Publishable results for the Machine Learning approach
-
+## Generalities 
 This is a consolidation of Exp2 and Exp4.
 
 I modify the file [Classif_all.py](Classif_all.py) to take into account some new directives :
@@ -129,7 +129,28 @@ I'll create a new one from that, it's [Exp6.py](Exp6.py)
 
 I modify the code that loads [labeled_firms_single.txt](labeled_firms_single.txt) so that it ignores the firms labelled with a supercategory or 999.
 
-I clean up the code in functions, so later I can load it as a module in a notebook.
+I clean up the classifying code in functions, so later I can load it as a module in a notebook.
+
+It will be difficult to get statistics w.r.t. each company, because we must make sure a company was not used in the training set.
+
+## Assessing the quality of the classifiers before the heat death of the universe
+
+If we loop over the firms, and train each classifier making sure we don't use the firm in the training set, the computation time will be prohibitive.
+
+If we train the classifiers beforehand, the firms will sometimes have been in the training set, which will not give us a good overview of the true performance.
+
+We should somehow do a leave one out on all the firms.
+
+That will give us the recall and power, as well as the trajectory of every company when confronted with a classifier that never has seen it.
+
+This is not simply straightforward, I add the code to Exp6.py.
+
+Results should be saved in a way that allow to recall them
+
+
+* From a company : we want to see how which classifierssaid 'it belongs to my category' and which said 'it does not belong to my category'
+* From a category : We want to see how many false positives and false negatives there are
+
 
 
 
