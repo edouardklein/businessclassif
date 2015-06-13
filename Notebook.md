@@ -145,10 +145,9 @@ That will give us the recall and power, as well as the trajectory of every compa
 
 This is not simply straightforward, I add the code to Exp6.py.
 
-Results should be saved in a way that allow to recall them
+Results should be saved in a way that allow to recall them :
 
-
-* From a company : we want to see how which classifierssaid 'it belongs to my category' and which said 'it does not belong to my category'
+* From a company : we want to see which classifiers said 'it belongs to my category' and which said 'it does not belong to my category'
 * From a category : We want to see how many false positives and false negatives there are
 
 
