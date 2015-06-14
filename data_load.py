@@ -160,5 +160,7 @@ def build_dicts():
 
 
 all_categories = list(pd.read_excel('descriptive_words.xls')['SIC3'])  # All categories that exist
+all_supercategories = set(map(supercat, all_categories))  # All supercategories that exist
 year_cik2categories, year_cik2text, category2years_ciks, year_cik2supercategories, supercategory2years_ciks = build_dicts()
+all_yciks = set(year_cik2text.keys())
 
