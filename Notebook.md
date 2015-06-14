@@ -149,6 +149,15 @@ Results should be saved in a way that allow to recall them :
 
 * From a company : we want to see which classifiers said 'it belongs to my category' and which said 'it does not belong to my category'
 * From a category : We want to see how many false positives and false negatives there are
+# Exp7 : Publishable results for the deterministic approach that uses the characteristic words
+I interrupt Exp6 for now because there is an urgent need to get exploitable results on Exp7.
+
+## Loading the data
+
+A big pain point in Exp6 was the loading of the data.
+
+I'm going to solve that problem in a separate module that I will then re-import when I get back to Exp6. This is the [data_load.py](data_load.py) module.
+
 
 
 
