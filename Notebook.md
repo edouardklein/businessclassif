@@ -158,8 +158,53 @@ A big pain point in Exp6 was the loading of the data.
 
 I'm going to solve that problem in a separate module that I will then re-import when I get back to Exp6. This is the [data_load.py](data_load.py) module.
 
+## Using the characteristic words to find the supercategory
+
+From the limited testing I did in [UsingDescriptiveWords.ipynb](UsingDescriptiveWords.ipynb), there is no clear-cut winner.
+
+I need to compute some metrics on all the methods to see which on fares best on the labeled data.
+
+Assessment methods making use of the labelled data :
+- Computing TP, TN, FP, FN over all labeled data, and then computing recall/precision (see https://en.wikipedia.org/wiki/Precision_and_recall for the formulas and explanations)
+
+I have now another pain point, which is shared with Exp6. It is the intuitive representation of various, related-but-not-quite-the-same measrures of performance over a multitude of classifiers on a large (a few thousands) dataset.
+
+On the bright side, I don't have on of the problem I had in Exp6 : dividing the data in a training and testing set. These methods need no training set, therefore I can use the whole dataset as the testing set without torturing my mind.
+
+I should write the results somewhere in an unambiguous, absolute, objective way, and only then experiment with the methods pioneered in [UsingDescriptiveWords.ipynb](UsingDescriptiveWords.ipynb) for the vizualization.
+
+If we look at the ground truth, we can access it from the perspective of the firm : we know which categories a (year, cik) (i.e. a descriptive text) belongs to.
+We can also access it from the perspective of the categories. Given a category (or supercategory for that matter, I should update the [data_load.py](data_load.py) file...) we know which are the firms (i.e. (year, cik) tuples, i.e. texts) that belong to it.
+
+We also have a list of all existing firms and all existing categories.
+
+We need to access the test results from the same angles. For every method (e.g. Machine learning classification, all must match, most matching, etc.) we must know :
+
+- a mapping from a firm (i.e. tuple, text) to the categories (see the figure [FPFN.png](FPFN.png))
+- a mapping from a category to the firms
+
+Then and only then we can work on vizualization in order to make things look good. Ideas about that :
+
+one dot is one firm :
+- Drawing the graph on the FP/FN space
+
+one dot is one classifier :
+- Drawing a graph on the precision/recall space
+- Drawing a graph on the FP/FN% space
+
+Order of business :
+ - Modify [data_load.py](data_load.py) to have a mapping with the supercategories
+ - Create [Exp7.py](Exp7.py) to run at least one method on the whole dataset and store the results in a dictionary
+ - Create [Exp7_graphs.ipynb](Exp7_graphs.ipynb) to vizualize those results
 
 
+
+
+## Using the characteristic words to find the category assuming we know the supercategory
+
+From the limited testing I did in [UsingDescriptiveWords.ipynb](UsingDescriptiveWords.ipynb), the most promising methods to find the category once we know the supercategoryseems to be 
+- all must match
+- match within rank 1
 
 
 # Misc Info
