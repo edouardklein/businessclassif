@@ -3,6 +3,8 @@
  - year_cik2categories maps (year, cik) tuples to the set of categories this tuple belongs to.
  - year_cik2text maps (year, cik) tuples to the text describing this tuple
  - category2years_ciks maps a category to the set of (year, cik) that belongs to it.
+ - supercategory2years_ciks maps a supercategory to the set of (year, cik) that belongs to it.
+ - year_cik2supercategories maps (year, cik) tuples to the set of supercategories this tuple belongs to.
 '''
 import glob
 import pickle
@@ -27,6 +29,11 @@ def write_pickle(fname, var, prefix='data/'):
     '''Serialize var into the file named fname'''
     with open(prefix+fname+'.pickle', 'wb') as f:
         pickle.dump(var, f)
+
+
+def supercat(c):
+    '''Return the supercategory for category c'''
+    return int(c/10)*10
 
 
 def is_super(cat):
@@ -120,6 +127,21 @@ def build_cat2yciks(ycik2cats):
     return category2years_ciks
 
 
+def build_ycik2scats(ycik2cats):
+    '''Build the mapping from a (year, cik) tuple to a set of supercategories'''
+    supercats = lambda cats: set(map(supercat, cats))
+    return {k:supercats(ycik2cats[k]) for k in ycik2cats}
+
+
+def build_scat2yciks(cat2year_ciks):
+    '''Build the mapping from a supercategory to a set of (year, cik) tuples'''
+    supercategory2years_ciks = defaultdict(set)
+    for cat, yciks in cat2year_ciks.items():
+        for ycik in yciks:
+            supercategory2years_ciks[supercat(cat)].add(ycik)
+    return supercategory2years_ciks
+
+
 def build_dicts():
     '''Load or, if necessary, build the different dictionaries provided by the module'''
     try:
@@ -131,9 +153,12 @@ def build_dicts():
         category2years_ciks = read_pickle('category2years_ciks')
     except FileNotFoundError:
         category2years_ciks = build_cat2yciks(year_cik2categories)
-    return year_cik2categories, year_cik2text, category2years_ciks
+    year_cik2supercategories = build_ycik2scats(year_cik2categories)
+    supercategory2years_ciks = build_scat2yciks(category2years_ciks)
+    return (year_cik2categories, year_cik2text, category2years_ciks,
+            year_cik2supercategories, supercategory2years_ciks)
 
 
 all_categories = list(pd.read_excel('descriptive_words.xls')['SIC3'])  # All categories that exist
-year_cik2categories, year_cik2text, category2years_ciks = build_dicts()
+year_cik2categories, year_cik2text, category2years_ciks, year_cik2supercategories, supercategory2years_ciks = build_dicts()
 

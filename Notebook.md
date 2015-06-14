@@ -186,14 +186,14 @@ We need to access the test results from the same angles. For every method (e.g. 
 Then and only then we can work on vizualization in order to make things look good. Ideas about that :
 
 one dot is one firm :
-- Drawing the graph on the FP/FN space
+- Drawing the graph on the FP-FN space
 
 one dot is one classifier :
-- Drawing a graph on the precision/recall space
-- Drawing a graph on the FP/FN% space
+- Drawing a graph on the precision-recall space
+- Drawing a graph on the %FP-%FN space
 
 Order of business :
- - Modify [data_load.py](data_load.py) to have a mapping with the supercategories
+ - Modify [data_load.py](data_load.py) to have a mapping with the supercategories. Done.
  - Create [Exp7.py](Exp7.py) to run at least one method on the whole dataset and store the results in a dictionary
  - Create [Exp7_graphs.ipynb](Exp7_graphs.ipynb) to vizualize those results
 
