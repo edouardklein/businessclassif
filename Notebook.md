@@ -191,10 +191,11 @@ one dot is one firm :
 one dot is one classifier :
 - Drawing a graph on the precision-recall space
 - Drawing a graph on the %FP-%FN space
+- Precision-recall curve with the area under the curve ? http://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html#example-model-selection-plot-precision-recall-py  This may make sense for methods with a parameter (e.g. match within rank k)
 
 Order of business :
  - Modify [data_load.py](data_load.py) to have a mapping with the supercategories. Done.
- - Create [Exp7.py](Exp7.py) to run at least one method on the whole dataset and store the results in a dictionary
+ - Create [Exp7.py](Exp7.py) to run at least one method on the whole dataset and store the results in a dictionary. Done.
  - Create [Exp7_graphs.ipynb](Exp7_graphs.ipynb) to vizualize those results
 
 
