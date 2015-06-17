@@ -13,15 +13,8 @@ import pandas as pd
 import functools
 
 
-# Loading labelled data
-with open('labeled_firms_single.txt', 'r') as f:
-    lines = f.read().split('\n')[1:]
-all_categories = list(pd.read_excel('descriptive_words.xls')['SIC3'])  # All categories that exist
 
 
-def is_super(cat):
-    '''Return True if cat is a supercategory'''
-    return cat % 10 == 0
 
 
 def is_sub_in_sup(sub, sup):
@@ -40,11 +33,6 @@ def cat_equal(c1,c2):
     else:
         return c1 == c2
 
-
-def should_delete(category):
-    '''Whether a company should be deleted from the labelled data'''
-    return is_super(category) or category == 999
-
 #DEBUG REMOVE
 DEBUG_categories = [602, 283, 737, 603, 679, 384]
 DEBUG_firms = defaultdict(set)
@@ -62,13 +50,6 @@ for l in [l for l in lines if l]:
     if category in DEBUG_categories:
         DEBUG_firms[(year, cik)].add(category)
     #END DEBUG
-
-old_length = len(year_cik2category)
-year_cik2category = {k:year_cik2category[k] for k in year_cik2category if not any(
-    [should_delete(cat) for cat in year_cik2category[k]])}
-print('INFO: We removed {} firms because one of their labels '
-      'was a supercategory or 999'.format(old_length - len(year_cik2category)))
-
 for ycik,cat_set in year_cik2category.items():
     for cat in cat_set:
         category2year_cik[cat].add(ycik)
@@ -183,24 +164,6 @@ def clf_single_eval(clf, ycik, year_cik2clf_yes, cat2year_cik):
     else:
         cat2year_cik[clf.category] = [(year, cik)]
     return year_cik2clf_yes, cat2year_cik
-
-
-def read_pickle(fname, alt=None):
-    '''Read a pickled variable from a file, returns the non None provided alt if
-    not found, raise an exception if not found and alt is None'''
-    try:
-         with open('Exp6/'+fname+'.pickle', 'rb') as f:
-             return pickle.load(f)
-    except FileNotFoundError:
-        if not alt is None:
-            return alt
-        raise
-
-
-def write_pickle(fname, var):
-    '''Serialize var into the file named fname'''
-    with open('Exp6/'+fname+'.pickle', 'wb') as f:
-        pickle.dump(var, f)
 
 
 class TextClassifer:

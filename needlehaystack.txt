@@ -1,0 +1,16 @@
+4600 samples
+100 supercategories
+~46 samples per supercategory
+
+1 very good strategy for supercategory SC:
+- All samples that belong to SC are recognized as such (no false negatives)
+- A very small proportion of samples are falsly recognized as belonging to SC (5% False positives)
+
+Running it on the 4600 samples
+the 46 positives samples get recognized
+5% of 4600 = 23 false positives
+Recall = tp/(tp+fn)= 46/(46+0) = 100%
+Precision = tp/(tp+fp) = 46/(46+23) = 66% !!!
+
+When faced with a haystack, no matter how good the needle detector is, the precision won't be good !
+This happens because the ground truth positive rate is small (~1%) 
