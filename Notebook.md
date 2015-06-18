@@ -200,6 +200,10 @@ Order of business :
 
 I adapt Exp7.py so that it uses the new labeled data.
 
+I run it, now it's time to select the best method.
+
+I finally have a plot I can make sense of (in Exp7_graphs).
+
 ## Using the new labeled data
 
 I had a file with only one category per sample. I got a new file with sometimes multiple categories.
@@ -229,3 +233,4 @@ Some methods are parametrized, we should find the best value of the parameter.
 - Cetegory 999 : probably mislabeled
 - Category ending in 0 : ambiguous or mislabeld, or in multiple subindustries
  
+# Questions
