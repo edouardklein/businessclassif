@@ -196,8 +196,12 @@ one dot is one classifier :
 Order of business :
  - Modify [data_load.py](data_load.py) to have a mapping with the supercategories. Done.
  - Create [Exp7.py](Exp7.py) to run at least one method on the whole dataset and store the results in a dictionary. Done.
- - Create [Exp7_graphs.ipynb](Exp7_graphs.ipynb) to vizualize those results
+ - Create [Exp7_graphs.ipynb](Exp7_graphs.ipynb) to vizualize those results. Done.
 
+## Using the new labeled data
+
+I had a file with only one category per sample. I got a new file with sometimes multiple categories.
+The first thing to do is to [data_load.py](data_load.py) so that it reads the new files : [labeled_firms99.txt](labeled_firms99.txt) and [labeled_firms98.txt](labeled_firms98.txt). Done.
 
 
 
@@ -206,6 +210,14 @@ Order of business :
 From the limited testing I did in [UsingDescriptiveWords.ipynb](UsingDescriptiveWords.ipynb), the most promising methods to find the category once we know the supercategoryseems to be 
 - all must match
 - match within rank 1
+
+## Running the chosen methods for the unknown categories
+
+Some categories do not appear (not even once) in the labelled data. We want to label all the firms we know of using the methods that worked best on the labelled data.
+
+We thus need to define what 'work best' means.
+We'd rather have false positives than false negatives.
+Some methods are parametrized, we should find the best value of the parameter.
 
 
 # Misc Info
