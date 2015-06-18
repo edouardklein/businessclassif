@@ -198,16 +198,19 @@ Order of business :
  - Create [Exp7.py](Exp7.py) to run at least one method on the whole dataset and store the results in a dictionary. Done.
  - Create [Exp7_graphs.ipynb](Exp7_graphs.ipynb) to vizualize those results. Done.
 
+I adapt Exp7.py so that it uses the new labeled data.
+
 ## Using the new labeled data
 
 I had a file with only one category per sample. I got a new file with sometimes multiple categories.
 The first thing to do is to [data_load.py](data_load.py) so that it reads the new files : [labeled_firms99.txt](labeled_firms99.txt) and [labeled_firms98.txt](labeled_firms98.txt). Done.
 
+I also load the cik and gvkeys. Done.
 
 
 ## Using the characteristic words to find the category assuming we know the supercategory
 
-From the limited testing I did in [UsingDescriptiveWords.ipynb](UsingDescriptiveWords.ipynb), the most promising methods to find the category once we know the supercategoryseems to be 
+From the limited testing I did in [UsingDescriptiveWords.ipynb](UsingDescriptiveWords.ipynb), the most promising methods to find the category once we know the supercategory seems to be
 - all must match
 - match within rank 1
 

@@ -150,8 +150,9 @@ def build_scat2yks(cat2year_keys):
 def build_cik_gvkey():
     '''Build the dicts that map cik <-> gvkey from the Excle file'''
     t = pd.read_excel('CIK_GVKEY.xlsx')
-    cik2gvkey = {t['cik'][i]:(int(t['gvkey'][i]) if not math.isnan(t['gvkey'][i]) else float('NaN')) for i in t.index}
-    gvkey2cik = {(int(t['gvkey'][i]) if not math.isnan(t['gvkey'][i]) else float('NaN')):t['cik'][i] for i in t.index}
+    cik2gvkey = {t['cik'][i]:(int(t['gvkey'][i]) if not math.isnan(t['gvkey'][i]) else 0) for i in t.index}
+    gvkey2cik = {(int(t['gvkey'][i]) if not math.isnan(t['gvkey'][i]) else 0):t['cik'][i] for i in t.index}
+    del gvkey2cik[0]
     write_pickle('cik2gvkey', cik2gvkey)
     write_pickle('gvkey2cik', gvkey2cik)
     return cik2gvkey, gvkey2cik
@@ -176,11 +177,15 @@ def build_dicts():
     year_key2supercategories = build_yk2scats(year_key2categories)
     supercategory2years_keys = build_scat2yks(category2years_keys)
     return (year_key2categories, year_key2text, category2years_keys,
-            year_key2supercategories, supercategory2years_keys)
+            year_key2supercategories, supercategory2years_keys, cik2gvkey, gvkey2cik)
 
 
-all_categories = list(pd.read_excel('descriptive_words.xls')['SIC3'])  # All categories that exist
+all_categories = set(pd.read_excel('descriptive_words.xls')['SIC3'])  # All categories that exist
 all_supercategories = set(map(supercat, all_categories))  # All supercategories that exist
-year_key2categories, year_key2text, category2years_keys, year_key2supercategories, supercategory2years_keys = build_dicts()
+year_key2categories, year_key2text, category2years_keys, year_key2supercategories, supercategory2years_keys, cik2gvkey, gvkey2cik = build_dicts()
 all_yks = set(year_key2text.keys())
+known_categories = set(category2years_keys.keys())  # Categories for which we know at least one sample
+unknown_categories = all_categories - known_categories  # Cetegories for which we have absolutely no samples
+known_supercategories = set(map(supercat, known_categories))
+unknown_supercategories = all_supercategories - known_supercategories
 
