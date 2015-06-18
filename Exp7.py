@@ -13,24 +13,54 @@ for cat in all_categories:
 
 results = read_pickle('results', alt={'methods':[]}, prefix='Exp7/')
 results['colors'] = []
-def load_or_compute_results(method):
-    '''Load or compute the results for the specified method'''
-    if  method in results['methods']:
-        return
+
+
+def sup_benchmark(method):
+    '''Compute the results w.r.t. the supercategories'''
     yk2scats = {}
     scat2yks = defaultdict(set)
     method_func = eval(method)
     for i, (year, cik, gvkey) in enumerate(all_yks):
-        print('INFO: Running strategy '+method+' on firm #{}'
+        print('INFO: SUPERCAT, Running strategy '+method+' on firm #{}'
               'of {}'.format(i, len(all_yks)))
         scats = method_func(year, cik, gvkey, cats=known_supercategories)
         yk2scats[(year, cik, gvkey)] = set(scats)
         for scat in scats:
             scat2yks[scat].add((year, cik, gvkey))
-    results[method+'/yk2scats'] = yk2scats
-    results[method+'/scat2yks'] = scat2yks
-    results['methods'].append(method)
-    write_pickle('results', results, prefix='Exp7/')
+    return yk2scats, scat2yks
+
+
+def cat_benchmark(method):
+    '''Compute the results for the task of finding the cat assuming we know the supercat'''
+    yk2cats = {}
+    cat2yks = defaultdict(set)
+    method_func = eval(method)
+    for i, (year, cik, gvkey) in enumerate(all_yks):
+        print('INFO: CAT, Running strategy '+method+' on firm #{}'
+              'of {}'.format(i, len(all_yks)))
+        scats = year_key2supercategories[(year, cik, gvkey)]
+        possible_cats = [c for c in known_categories if supercat(c) in scats]
+        cats = method_func(year, cik, gvkey, cats=possible_cats)
+        yk2cats[(year, cik, gvkey)] = set(cats)
+        for cat in cats:
+            cat2yks[cat].add((year, cik, gvkey))
+    return yk2cats, cat2yks
+
+
+def load_or_compute_results(method):
+    '''Load or compute the results for the specified method'''
+    if  not method+'/yk2scats' in results or not method+'/scat2yks' in results:
+        yk2scats, scat2yks = sup_benchmark(method)
+        results[method+'/yk2scats'] = yk2scats
+        results[method+'/scat2yks'] = scat2yks
+        write_pickle('results', results, prefix='Exp7/')
+    if not method+'/yk2cats' in results or not method+'/cat2yks' in results:
+        yk2cats, cat2yks = cat_benchmark(method)
+        results[method+'/yk2cats'] = yk2cats
+        results[method+'/cat2yks'] = cat2yks
+        write_pickle('results', results, prefix='Exp7/')
+    if not method in results['methods']:
+        results['methods'].append(method)
 
 # cat2regexp[XX0] will yield the words specified only in the line corresponding to
 # XX0 in the excel file
@@ -69,7 +99,7 @@ def any_aggregated_match(year, cik, gvkey, cats=all_supercategories):
 
 
 load_or_compute_results('any_match')
-load_or_compute_results('any_aggregated_match')
+#load_or_compute_results('any_aggregated_match')
 results['colors'].append('maroon')
 results['colors'].append('darkred')
 

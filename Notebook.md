@@ -210,6 +210,9 @@ Then, I'll need to find out the pareto extremum : all_yes and all_no.
 
 Done, The graph Exp7.pdf shows it all.
 
+I choose `any_match`, as we prefer false positives over false negatives.
+
+
 ## Using the new labeled data
 
 I had a file with only one category per sample. I got a new file with sometimes multiple categories.
@@ -224,6 +227,16 @@ From the limited testing I did in [UsingDescriptiveWords.ipynb](UsingDescriptive
 - all must match
 - match within rank 1
 
+I need now to run something like Exp7, but focusing on finding the subcategory.
+
+I complete the Exp7.py file.
+
+The results (Exp7_sub.pdf) are worse than what I expected.
+
+It seems difficult to avoid the trade-off between false-positives and false-negatives...
+
+
+
 ## Running the chosen methods for the unknown categories
 
 Some categories do not appear (not even once) in the labelled data. We want to label all the firms we know of using the methods that worked best on the labelled data.
@@ -231,6 +244,8 @@ Some categories do not appear (not even once) in the labelled data. We want to l
 We thus need to define what 'work best' means.
 We'd rather have false positives than false negatives.
 Some methods are parametrized, we should find the best value of the parameter.
+
+Maybe we should reject the supercategory if no subcategory is found by a specific (as in specificity/sensitivity) method.
 
 
 # Misc Info
