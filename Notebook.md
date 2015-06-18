@@ -237,7 +237,7 @@ It seems difficult to avoid the trade-off between false-positives and false-nega
 
 
 
-## Running the chosen methods for the unknown categories
+# Exp8 : Running the chosen methods for the unknown categories
 
 Some categories do not appear (not even once) in the labelled data. We want to label all the firms we know of using the methods that worked best on the labelled data.
 
@@ -246,6 +246,9 @@ We'd rather have false positives than false negatives.
 Some methods are parametrized, we should find the best value of the parameter.
 
 Maybe we should reject the supercategory if no subcategory is found by a specific (as in specificity/sensitivity) method.
+
+I'll write a small utility [Exp8.py](Exp8.py) that will run the specified methods and output the desired file (see the format on outputformat.png). Done.
+
 
 
 # Misc Info
