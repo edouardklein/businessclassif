@@ -12,6 +12,7 @@ for cat in all_categories:
 
 
 results = read_pickle('results', alt={'methods':[]}, prefix='Exp7/')
+results['colors'] = []
 def load_or_compute_results(method):
     '''Load or compute the results for the specified method'''
     if  method in results['methods']:
@@ -69,7 +70,8 @@ def any_aggregated_match(year, cik, gvkey, cats=all_supercategories):
 
 load_or_compute_results('any_match')
 load_or_compute_results('any_aggregated_match')
-
+results['colors'].append('maroon')
+results['colors'].append('darkred')
 
 def all_must_match(year, cik, gvkey, cats=all_categories):
     '''Return all categories for which all descriptive words are in the text'''
@@ -87,6 +89,7 @@ def all_must_match(year, cik, gvkey, cats=all_categories):
 
 
 load_or_compute_results('all_must_match')
+results['colors'].append('red')
 
 
 def n_most_matching(year, cik, gvkey, n, cats=all_categories):
@@ -100,7 +103,7 @@ def n_most_matching(year, cik, gvkey, n, cats=all_categories):
                 matching_prop[cat] += 1
         matching_prop[cat] /= len(d_words[cat])
     sorted_cats = sorted(list(matching_prop.keys()), key=lambda k: matching_prop[k], reverse=True)
-    return sorted_cats[0:n+1]
+    return sorted_cats[0:n]
 
 
 def most_matching(year, cik, gvkey, cats=all_categories):
@@ -119,10 +122,20 @@ def most_20_matching(year, cik, gvkey, cats=all_categories):
     return n_most_matching(year, cik, gvkey, 20, cats=cats)
 
 
+def most_100_matching(year, cik, gvkey, cats=all_categories):
+    return n_most_matching(year, cik, gvkey, 100, cats=cats)
+
+
 load_or_compute_results('most_matching')
 load_or_compute_results('most_2_matching')
 load_or_compute_results('most_5_matching')
 load_or_compute_results('most_20_matching')
+load_or_compute_results('most_100_matching')
+results['colors'].append('lightpink')
+results['colors'].append('pink')
+results['colors'].append('hotpink')
+results['colors'].append('deeppink')
+results['colors'].append('fuchsia')
 
 
 def match_within_rank_k(year, cik, gvkey, k, cats=all_categories):
@@ -166,3 +179,42 @@ load_or_compute_results('match_within_rank_1')
 load_or_compute_results('match_within_rank_10')
 load_or_compute_results('match_within_rank_30')
 load_or_compute_results('match_within_rank_100')
+results['colors'].append('darkslateblue')
+results['colors'].append('slateblue')
+results['colors'].append('blue')
+results['colors'].append('darkblue')
+
+def alpha_most_matching(year, cik, gvkey, alpha, cats=all_categories):
+    '''Return the alpha*N categories with the highest percentage of matching words where N is the number of
+    categories that present at list one matching word'''
+    text = year_key2text[(year, cik, gvkey)]
+    matching_prop = {}  # \in [0;1], the proportion of descriptive words in the text
+    for cat in cats:
+        matching_prop[cat] = 0
+        for word in d_words[cat]:
+            if word in text:
+                matching_prop[cat] += 1
+        matching_prop[cat] /= len(d_words[cat])
+    sorted_cats = sorted(list(matching_prop.keys()), key=lambda k: matching_prop[k], reverse=True)
+    sorted_cats = [c for c in sorted_cats if matching_prop[c] > 0]
+    return sorted_cats[0:int(alpha*len(sorted_cats))]
+
+
+def half_most_matching(year, cik, gvkey, cats=all_categories):
+    return alpha_most_matching(year, cik, gvkey, 0.5, cats=cats)
+
+
+def ten_percent_most_matching(year, cik, gvkey, cats=all_categories):
+    return alpha_most_matching(year, cik, gvkey, 0.1, cats=cats)
+
+
+def ninety_percent_most_matching(year, cik, gvkey, cats=all_categories):
+    return alpha_most_matching(year, cik, gvkey, 0.9, cats=cats)
+
+
+load_or_compute_results('half_most_matching')
+load_or_compute_results('ten_percent_most_matching')
+load_or_compute_results('ninety_percent_most_matching')
+results['colors'].append('gold')
+results['colors'].append('yellow')
+results['colors'].append('palegoldenrod')

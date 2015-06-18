@@ -204,6 +204,12 @@ I run it, now it's time to select the best method.
 
 I finally have a plot I can make sense of (in Exp7_graphs).
 
+I get the idea of a new strategy : alpha most matching.
+
+Then, I'll need to find out the pareto extremum : all_yes and all_no.
+
+Done, The graph Exp7.pdf shows it all.
+
 ## Using the new labeled data
 
 I had a file with only one category per sample. I got a new file with sometimes multiple categories.
