@@ -6,7 +6,7 @@ import numpy as np
 
 desc_table = pd.read_excel('descriptive_words.xls')
 d_words = {}
-for cat in all_categories:
+for cat in all_categories | all_supercategories:
     row = desc_table[desc_table['SIC3'] == cat]
     d_words[cat] = row[row.columns[2:]].dropna(axis=1).loc[row.index[0]].tolist()
 

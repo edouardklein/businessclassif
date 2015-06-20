@@ -249,7 +249,7 @@ Maybe we should reject the supercategory if no subcategory is found by a specifi
 
 I'll write a small utility [Exp8.py](Exp8.py) that will run the specified methods and output the desired file (see the format on outputformat.png). Done.
 
-
+There is a bug where supercategories appear in the results. And the filename in the resutls is not the base name. Solved.
 
 # Misc Info
 - Supercategories : first two digits
